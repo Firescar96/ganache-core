@@ -1,3 +1,4 @@
+var BN = require('bn.js');
 var Web3 = require('web3');
 var TestRPC = require("../index.js");
 var assert = require('assert');
@@ -30,7 +31,7 @@ describe("Mining", function() {
   });
 
   beforeEach("checkpoint, so that we can revert later", function(done) {
-    web3.currentProvider.sendAsync({
+    web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "evm_snapshot",
       id: new Date().getTime()
@@ -43,7 +44,7 @@ describe("Mining", function() {
   });
 
   afterEach("revert back to checkpoint", function(done) {
-    web3.currentProvider.sendAsync({
+    web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "evm_revert",
       params: [snapshot_id],
@@ -63,7 +64,7 @@ describe("Mining", function() {
 
   function startMining() {
     return new Promise(function(accept, reject) {
-      web3.currentProvider.sendAsync({
+      web3.currentProvider.send({
         jsonrpc: "2.0",
         method: "miner_start",
         params: [1],
@@ -77,7 +78,7 @@ describe("Mining", function() {
 
   function stopMining() {
     return new Promise(function(accept, reject) {
-      web3.currentProvider.sendAsync({
+      web3.currentProvider.send({
         jsonrpc: "2.0",
         method: "miner_stop",
         id: new Date().getTime()
@@ -90,7 +91,7 @@ describe("Mining", function() {
 
   function checkMining() {
     return new Promise(function(accept, reject) {
-      web3.currentProvider.sendAsync({
+      web3.currentProvider.send({
         jsonrpc: "2.0",
         method: "eth_mining",
         id: new Date().getTime()
@@ -103,7 +104,7 @@ describe("Mining", function() {
 
   function mineSingleBlock() {
     return new Promise(function(accept, reject) {
-      web3.currentProvider.sendAsync({
+      web3.currentProvider.send({
         jsonrpc: "2.0",
         method: "evm_mine",
         id: new Date().getTime()
@@ -169,14 +170,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 90000, web3.toWei(2, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(2), "ether"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 90000, web3.toWei(3, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 90000, web3.utils.toWei(new BN(3), "ether"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -210,14 +211,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(2, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "ether"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(3, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "ether"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -250,14 +251,14 @@ describe("Mining", function() {
       return getBlockNumber();
     }).then(function(number) {
       blockNumber = number;
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(2, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(2), "ether"));
     }).then(function(tx) {
       tx1 = tx;
       return getReceipt(tx);
     }).then(function(receipt) {
       assert.equal(receipt, null);
 
-      return queueTransaction(accounts[0], accounts[1], 4000000, web3.toWei(3, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 4000000, web3.utils.toWei(new BN(3), "ether"));
     }).then(function(tx) {
       tx2 = tx;
       return getReceipt(tx);
@@ -281,7 +282,7 @@ describe("Mining", function() {
 
   it("should error if queued transaction exceeds the block gas limit", function() {
     return stopMining().then(function() {
-      return queueTransaction(accounts[0], accounts[1], 10000000, web3.toWei(2, "Ether"));
+      return queueTransaction(accounts[0], accounts[1], 10000000, web3.utils.toWei(new BN(2), "ether"));
     }).then(function(tx) {
       // It should never get here.
       throw new Error("Transaction was processed without erroring; gas limit should have been too high");

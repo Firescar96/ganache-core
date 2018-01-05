@@ -60,7 +60,7 @@ describe("Runtime Errors", function() {
 
   it("should output the transaction hash even if a runtime error occurs", function(done) {
     // we can't use `web3.eth.sendTransaction` because it will obfuscate the result
-    web3.currentProvider.sendAsync({
+    web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "eth_sendTransaction",
       params: [{

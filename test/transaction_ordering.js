@@ -16,14 +16,14 @@ describe("Transaction Ordering", function() {
   });
 
   beforeEach(function(done){
-    web3.currentProvider.sendAsync({
+    web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "miner_stop",
     }, done)
   });
 
   afterEach(function(done){
-    web3.currentProvider.sendAsync({
+    web3.currentProvider.send({
       jsonrpc: "2.0",
       method: "miner_start",
       params: [1]
@@ -42,7 +42,7 @@ describe("Transaction Ordering", function() {
       tx_data.nonce=1;
       web3.eth.sendTransaction(tx_data, function(err, tx){
         if (err){return done(err)}
-        web3.currentProvider.sendAsync({
+        web3.currentProvider.send({
           jsonrpc: "2.0",
           method: "miner_start",
           params: [1]
@@ -70,7 +70,7 @@ describe("Transaction Ordering", function() {
       tx_data.from = accounts[1];
       web3.eth.sendTransaction(tx_data, function(err, tx){
         if (err){return done(err)}
-        web3.currentProvider.sendAsync({
+        web3.currentProvider.send({
           jsonrpc: "2.0",
           method: "miner_start",
           params: [1]
